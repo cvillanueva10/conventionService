@@ -3,17 +3,15 @@ package org.akpsi.conventionapp.util;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
-import org.springframework.beans.factory.annotation.Value;
-
 public class ConnectionFactory {
 
-	@Value("${jdbc.url}")
+//	@Value("${jdbc.url}")
 	private static String jdbcUrl = "jdbc:mysql://adrianacala.com:3305/akpsi";
 	
-	@Value("${jdbc.username}")
+//	@Value("${jdbc.username}")
 	private static String username = "akpsi";
 	
-	@Value("${jdbc.password}")
+//	@Value("${jdbc.password}")
 	private static String password = "zetaetatheta";
 	
 	// Private constructor so you create a new instance of this class.
