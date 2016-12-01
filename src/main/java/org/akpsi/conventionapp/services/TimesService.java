@@ -34,7 +34,7 @@ public class TimesService {
 				time.setTime(rs.getString("time"));
 				times.add(time);
 			}
-		} catch (SQLException e) {
+		} catch (SQLException e) {	
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
