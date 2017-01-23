@@ -1,18 +1,47 @@
 package org.akpsi.conventionapp.objects;
 
-public class Users {
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public class User {
 	
 	String email;
 	String salt;
 	String password;
-	String phone_number;
-	String created_on;
-	String edited_on;
+	@JsonProperty("cell")
+	String phoneNumber;
+	@JsonProperty("created_on")
+	String createdOn;
+	@JsonProperty("edited_on")
+	String editedOn;
 	String address;
 	String city;
 	String state;
-	String zip;
+	String country;
 	
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+	public String getCreatedOn() {
+		return createdOn;
+	}
+	public void setCreatedOn(String createdOn) {
+		this.createdOn = createdOn;
+	}
+	public String getEditedOn() {
+		return editedOn;
+	}
+	public void setEditedOn(String editedOn) {
+		this.editedOn = editedOn;
+	}
+	public String getCountry() {
+		return country;
+	}
+	public void setCountry(String country) {
+		this.country = country;
+	}
 	public String getEmail() {
 		return email;
 	}
@@ -27,34 +56,12 @@ public class Users {
 		this.salt = salt;
 	}
 	
-	public String getPhone_number() {
-		return phone_number;
-	}
-	public void setPhone_number(String phone_number) {
-		this.phone_number = phone_number;
-	}
-	
 	public String getPassword() {
 		return password;
 	}
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
-	public String getCreated_on() {
-		return created_on;
-	}
-	public void setCreated_on(String created_on) {
-		this.created_on = created_on;
-	}
-	
-	public String getEdited_on() {
-		return edited_on;
-	}
-	public void setEdited_on(String edited_on) {
-		this.edited_on = edited_on;
-	}
-	
 	public String getAddress() {
 		return address;
 	}
@@ -75,12 +82,4 @@ public class Users {
 	public void setState(String state) {
 		this.state = state;
 	}
-	
-	public String getZip() {
-		return zip;
-	}
-	public void setZip(String zip) {
-		this.zip = zip;
-	}
-	
 }

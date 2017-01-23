@@ -18,12 +18,14 @@ import javax.crypto.spec.PBEKeySpec;
 import org.akpsi.conventionapp.objects.Country;
 import org.akpsi.conventionapp.objects.Response;
 import org.akpsi.conventionapp.objects.State;
+import org.akpsi.conventionapp.objects.User;
 import org.akpsi.conventionapp.util.ConnectionFactory;
 import org.akpsi.conventionapp.util.Constants;
+import org.springframework.security.crypto.codec.Base64;
 import org.springframework.security.crypto.keygen.KeyGenerators;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -39,28 +41,21 @@ public class RegisterUserService {
 	}
 
 	@RequestMapping(value = "/createUser", method = RequestMethod.POST)
-	public Response createUser(
-			@RequestParam (value = "email", required = false) String email,
-			@RequestParam (value = "password", required = false) String password,
-			@RequestParam (value = "cell", required = false) String cell,
-			@RequestParam (value = "address", required = false) String address,
-			@RequestParam (value = "city", required = false) String city,
-			@RequestParam (value = "state", required = false) String state,
-			@RequestParam (value = "zip", required = false) String zip
-			) {
+	public Response createUser(@RequestBody User user) {
+		
 		try(
 				Connection conn = ConnectionFactory.getConnection();
 				PreparedStatement ps = conn.prepareStatement(Constants.REGISTER_USER);
 				) {
 			String salt = generateSalt();
-			ps.setString(1, email);
+			ps.setString(1, user.getEmail());
 			ps.setString(2, salt);
-			ps.setString(3, hashPassword(password.toCharArray(), salt.getBytes(), 1, 256));
-			ps.setString(4, cell);
-			ps.setString(5, address);
-			ps.setString(6, city);
-			ps.setString(7, state);
-			ps.setString(8, zip);
+			ps.setString(3, hashPassword(user.getPassword().toCharArray(), salt.getBytes(), 1, 256));
+			ps.setString(4, user.getPhoneNumber());
+			ps.setString(5, user.getAddress());
+			ps.setString(6, user.getCity());
+			ps.setString(7, user.getState());
+			ps.setString(8, user.getCountry());
 			ps.execute();
 		}
 		catch(Exception e) {
@@ -70,7 +65,7 @@ public class RegisterUserService {
 	}
 
 	private String generateSalt() {
-		return KeyGenerators.string().generateKey();
+		return new String(KeyGenerators.string().generateKey());
 	}
 	
 	@RequestMapping("/GetStates")
