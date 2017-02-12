@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TimesService {
 
+	
 	@RequestMapping("/listTimes")
 	public List<Times> getTime(){
 		
@@ -35,7 +36,6 @@ public class TimesService {
 				times.add(time);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

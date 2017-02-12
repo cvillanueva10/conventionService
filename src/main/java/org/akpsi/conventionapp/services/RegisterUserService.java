@@ -21,7 +21,7 @@ import org.akpsi.conventionapp.objects.State;
 import org.akpsi.conventionapp.objects.User;
 import org.akpsi.conventionapp.util.ConnectionFactory;
 import org.akpsi.conventionapp.util.Constants;
-import org.springframework.security.crypto.codec.Base64;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,7 +37,9 @@ public class RegisterUserService {
 		PBEKeySpec spec = new PBEKeySpec(password, salt, iterations, keyLength);
 		SecretKey key = skf.generateSecret(spec);
 		byte[] res = key.getEncoded( );
-		return new String(res, StandardCharsets.UTF_8);
+		String strPass = new String(res, StandardCharsets.UTF_8);
+		byte[] encodedPassword = Base64.encodeBase64(strPass.getBytes());
+		return new String(encodedPassword);
 	}
 
 	@RequestMapping(value = "/createUser", method = RequestMethod.POST)
@@ -48,14 +50,16 @@ public class RegisterUserService {
 				PreparedStatement ps = conn.prepareStatement(Constants.REGISTER_USER);
 				) {
 			String salt = generateSalt();
-			ps.setString(1, user.getEmail());
-			ps.setString(2, salt);
-			ps.setString(3, hashPassword(user.getPassword().toCharArray(), salt.getBytes(), 1, 256));
-			ps.setString(4, user.getPhoneNumber());
-			ps.setString(5, user.getAddress());
-			ps.setString(6, user.getCity());
-			ps.setString(7, user.getState());
-			ps.setString(8, user.getCountry());
+			ps.setString(1, user.getFirstName());
+			ps.setString(2, user.getLastName());
+			ps.setString(3, user.getEmail());
+			ps.setString(4, salt);
+			ps.setString(5, hashPassword(user.getPassword().toCharArray(), salt.getBytes(), 1, 256));
+			ps.setString(6, user.getPhoneNumber());
+			ps.setString(7, user.getAddress());
+			ps.setString(8, user.getCity());
+			ps.setString(9, user.getState());
+			ps.setString(10, user.getCountry());
 			ps.execute();
 		}
 		catch(Exception e) {
@@ -68,7 +72,7 @@ public class RegisterUserService {
 		return new String(KeyGenerators.string().generateKey());
 	}
 	
-	@RequestMapping("/GetStates")
+	@RequestMapping("/getStates")
 	public List<State> getStates(){
 		List<State> states = new LinkedList<State>();
 		try(
@@ -86,7 +90,7 @@ public class RegisterUserService {
 		return states;
 	}
 	
-	@RequestMapping("/GetCountries")
+	@RequestMapping("/getCountries")
 	public List<Country> getCountries(){
 		List<Country> countries = new LinkedList<Country>();
 		try(

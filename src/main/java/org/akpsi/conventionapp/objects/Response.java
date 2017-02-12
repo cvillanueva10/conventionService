@@ -2,25 +2,25 @@ package org.akpsi.conventionapp.objects;
 
 public class Response {
 
-	boolean status;
+	boolean success;
 	String message = null;
 	
-	public Response(boolean status){
-		this.status = status;
+	public Response(boolean success){
+		this.success = success;
 		this.message = null;
 	}
 	
-	public Response(boolean status, String message){
-		this.status = status;
+	public Response(boolean success, String message){
+		this.success = success;
 		this.message = message;
 	}
 
-	public boolean isStatus() {
-		return status;
+	public boolean issuccess() {
+		return success;
 	}
 
-	public void setStatus(boolean status) {
-		this.status = status;
+	public void setsuccess(boolean success) {
+		this.success = success;
 	}
 
 	public String getMessage() {

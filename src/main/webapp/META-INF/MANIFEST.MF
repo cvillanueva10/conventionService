@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Implementation-Title: ConventionService
+Implementation-Version: 1.0.0-SNAPSHOT
+Built-By: adria
+Implementation-Vendor-Id: org.akpsi.ConventionService
+Build-Jdk: 1.8.0_101
+Implementation-URL: http://projects.spring.io/spring-boot/ConventionSe
+ rvice/
+Created-By: Maven Integration for Eclipse
+Implementation-Vendor: Pivotal Software, Inc.
+Main-Class: org.akpsi.conventionapp.Application
+

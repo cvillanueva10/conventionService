@@ -1,9 +1,14 @@
 package org.akpsi.conventionapp.objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 
 public class User {
 	
+	String firstName;
+	String lastName;
 	String email;
 	String salt;
 	String password;
@@ -17,7 +22,25 @@ public class User {
 	String city;
 	String state;
 	String country;
+	String userId;
 	
+	public String serialize(boolean pretty) {
+		String json = null;
+		try {
+			ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+			json = ow.writeValueAsString(this);
+		} catch (JsonProcessingException e) {
+			return null;
+		}
+		return json;
+	}
+	
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
 	public String getPhoneNumber() {
 		return phoneNumber;
 	}
@@ -81,5 +104,17 @@ public class User {
 	}
 	public void setState(String state) {
 		this.state = state;
+	}
+	public String getFirstName() {
+		return firstName;
+	}
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+	public String getLastName() {
+		return lastName;
+	}
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 }
