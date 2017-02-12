@@ -60,6 +60,8 @@ public class RegisterUserService {
 			ps.setString(8, user.getCity());
 			ps.setString(9, user.getState());
 			ps.setString(10, user.getCountry());
+			ps.setInt(11, Integer.parseInt(user.getAllowEmail()));
+			ps.setInt(12, Integer.parseInt(user.getAllowText()));
 			ps.execute();
 		}
 		catch(Exception e) {

@@ -23,7 +23,25 @@ public class User {
 	String state;
 	String country;
 	String userId;
+	String allowText;
+	String allowEmail;
 	
+	public String getAllowText() {
+		return allowText;
+	}
+
+	public void setAllowText(String allowText) {
+		this.allowText = allowText;
+	}
+
+	public String getAllowEmail() {
+		return allowEmail;
+	}
+
+	public void setAllowEmail(String allowEmail) {
+		this.allowEmail = allowEmail;
+	}
+
 	public String serialize(boolean pretty) {
 		String json = null;
 		try {
