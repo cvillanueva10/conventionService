@@ -42,8 +42,33 @@ public class RegisterUserService {
 		return new String(encodedPassword);
 	}
 
+	public static boolean userExist(String email){
+		try(Connection conn = ConnectionFactory.getConnection();
+				PreparedStatement ps = conn.prepareStatement(Constants.CHECK_FOR_USER)){
+			int numOfUserWithEmail = Integer.MIN_VALUE;
+			ps.setString(1, email);
+			try(ResultSet rs = ps.executeQuery()){
+				if (rs.next()){
+					numOfUserWithEmail = rs.getInt(1);
+				}
+			}
+			if (numOfUserWithEmail==1){
+				return true;
+			}
+			return false;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return true;
+	}
+	
 	@RequestMapping(value = "/createUser", method = RequestMethod.POST)
 	public Response createUser(@RequestBody User user) {
+		
+		// First check to see if the user exists.
+		if (userExist(user.getEmail())){
+			return new Response(false,"Email is already in use.");
+		}
 		
 		try(
 				Connection conn = ConnectionFactory.getConnection();
