@@ -17,4 +17,6 @@ public class Constants {
 	public static final String CREATE_NEW_SESSION = "insert into sessions (userId, session, expires_on) VALUES (?,?,NOW() + INTERVAL 1 DAY) ";
 
 	public static final String CHECK_FOR_USER = "SELECT count(email) from `users` where email=?";
+	
+	public final static String EMAIL_SERVICE_URL = "http://convention.adrianacala.com:8004/";
 }

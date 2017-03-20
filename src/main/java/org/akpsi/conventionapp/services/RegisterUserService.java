@@ -1,5 +1,6 @@
 package org.akpsi.conventionapp.services;
 
+
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -22,11 +23,18 @@ import org.akpsi.conventionapp.objects.User;
 import org.akpsi.conventionapp.util.ConnectionFactory;
 import org.akpsi.conventionapp.util.Constants;
 import org.apache.commons.codec.binary.Base64;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.keygen.KeyGenerators;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 @RestController
 public class RegisterUserService {
@@ -61,15 +69,15 @@ public class RegisterUserService {
 		}
 		return true;
 	}
-	
+
 	@RequestMapping(value = "/createUser", method = RequestMethod.POST)
 	public Response createUser(@RequestBody User user) {
-		
+
 		// First check to see if the user exists.
 		if (userExist(user.getEmail())){
 			return new Response(false,"Email is already in use.");
 		}
-		
+
 		try(
 				Connection conn = ConnectionFactory.getConnection();
 				PreparedStatement ps = conn.prepareStatement(Constants.REGISTER_USER);
@@ -88,6 +96,22 @@ public class RegisterUserService {
 			ps.setInt(11, Integer.parseInt(user.getAllowEmail()));
 			ps.setInt(12, Integer.parseInt(user.getAllowText()));
 			ps.execute();
+
+			if (Integer.parseInt(user.getAllowEmail()) == 1){
+				HttpHeaders headers = new HttpHeaders();
+				RestTemplate restTemplate = new RestTemplate();
+				headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+				MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
+				map.add("apiKey", "4hJctCGcfUNkEkJh9mH42yQ3Q9WHQhLv");
+				map.add("toAddress", user.getEmail());
+				map.add("subject", "AKPsi Convention Registration Complete");
+				map.add("message", "Congratulations!" + "\n" + "You have successfully registered for Convention!");
+
+				HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
+
+				restTemplate.postForEntity(Constants.EMAIL_SERVICE_URL , request , String.class );
+			}
 		}
 		catch(Exception e) {
 			return new Response(false, "Error creating user");
@@ -98,7 +122,7 @@ public class RegisterUserService {
 	private String generateSalt() {
 		return new String(KeyGenerators.string().generateKey());
 	}
-	
+
 	@RequestMapping("/getStates")
 	public List<State> getStates(){
 		List<State> states = new LinkedList<State>();
@@ -116,7 +140,7 @@ public class RegisterUserService {
 
 		return states;
 	}
-	
+
 	@RequestMapping("/getCountries")
 	public List<Country> getCountries(){
 		List<Country> countries = new LinkedList<Country>();
