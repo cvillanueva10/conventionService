@@ -13,8 +13,6 @@ import java.sql.SQLException;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.akpsi.conventionapp.objects.Response;
@@ -39,18 +37,6 @@ public class UserLoginService {
 		String strPass =  new String(res, StandardCharsets.UTF_8);
 		byte[] encodedPassword = Base64.encodeBase64(strPass.getBytes());
 		return new String(encodedPassword);
-	}
-	
-	@RequestMapping(value = "/auth/login", method = RequestMethod.GET)
-	public Response getUser(HttpServletRequest request, HttpServletResponse response) {
-		Cookie[] cookies = request.getCookies();
-		if (cookies!=null){
-			for (Cookie cookie : cookies){
-				System.out.println(cookie.toString());
-			}
-		}
-		Response resp = new Response(true);
-		return resp;
 	}
 	
 	@RequestMapping(value = "/auth/login", method = RequestMethod.POST)

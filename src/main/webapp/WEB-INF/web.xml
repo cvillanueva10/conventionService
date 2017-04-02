@@ -9,13 +9,4 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
-  <filter>
-    <filter-name>DefaultFilter</filter-name>
-    <filter-class>org.akpsi.conventionapp.security.DefaultFilter</filter-class>
-  </filter>
-
-  <filter-mapping>
-    <filter-name>DefaultFilter</filter-name>
-    <url-pattern>/authed/*</url-pattern>
-  </filter-mapping>
 </web-app>
