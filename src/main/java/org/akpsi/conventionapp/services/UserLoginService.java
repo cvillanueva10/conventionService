@@ -29,8 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class UserLoginService {
-
-	private final int SECONDS_IN_A_DAY = 86400;
 	
 	public static String hashPassword( final char[] password, final byte[] salt, final int iterations, final int keyLength ) throws InvalidKeySpecException, NoSuchAlgorithmException {
 
@@ -87,15 +85,15 @@ public class UserLoginService {
 			return new Response(false);
 		}
 		if (actualPassword.equals(hashedUserPassword)){
-			String sessionId = generateSession(actualUser);
-			Cookie cookie = new Cookie("JSESSIONID", sessionId);
-			cookie.setMaxAge(SECONDS_IN_A_DAY);
-			cookie.setSecure(true);
-			cookie.setPath("/");
-			response.addCookie(cookie);
+			actualUser.setSessionId(generateSession(actualUser));
+			clearSensitiveInformation(actualUser);
 			return new Response(true, actualUser.serialize(false));
 		}
 		return new Response(false, "The username and/or password is incorrect.");
+	}
+
+	private void clearSensitiveInformation(User actualUser) {
+		actualUser.setUserId(null);
 	}
 
 	private String generateSession(User user) {

@@ -25,7 +25,16 @@ public class User {
 	String userId;
 	String allowText;
 	String allowEmail;
+	String sessionId;
 	
+	public String getSessionId() {
+		return sessionId;
+	}
+
+	public void setSessionId(String sessionId) {
+		this.sessionId = sessionId;
+	}
+
 	public String getAllowText() {
 		return allowText;
 	}
