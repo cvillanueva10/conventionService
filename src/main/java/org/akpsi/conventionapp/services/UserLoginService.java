@@ -39,7 +39,7 @@ public class UserLoginService {
 		return new String(encodedPassword);
 	}
 	
-	@RequestMapping(value = "/auth/login", method = RequestMethod.POST)
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public Response createUser(@RequestBody User user, HttpServletResponse response) {
 		User actualUser = new User();
 		String actualPassword = null;

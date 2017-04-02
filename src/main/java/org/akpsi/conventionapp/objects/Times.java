@@ -6,7 +6,14 @@ public class Times {
 	String time;
 	String activity;
 	String description;
+	boolean canRegister;
 	
+	public boolean isCanRegister() {
+		return canRegister;
+	}
+	public void setCanRegister(boolean canRegister) {
+		this.canRegister = canRegister;
+	}
 	public String getDate() {
 		return date;
 	}
