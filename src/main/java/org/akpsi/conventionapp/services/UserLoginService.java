@@ -1,9 +1,7 @@
 package org.akpsi.conventionapp.services;
 
-import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -71,32 +69,10 @@ public class UserLoginService {
 			return new Response(false);
 		}
 		if (actualPassword.equals(hashedUserPassword)){
-			actualUser.setSessionId(generateSession(actualUser));
-			clearSensitiveInformation(actualUser);
+			actualUser.setSessionId(CommonServices.generateSession(actualUser));
+			CommonServices.clearSensitiveInformation(actualUser);
 			return new Response(true, actualUser.serialize(false));
 		}
 		return new Response(false, "The username and/or password is incorrect.");
-	}
-
-	private void clearSensitiveInformation(User actualUser) {
-		actualUser.setUserId(null);
-	}
-
-	private String generateSession(User user) {
-		SecureRandom random = new SecureRandom();
-		String hash = new BigInteger(255, random).toString(32);
-
-		try (
-				Connection conn = ConnectionFactory.getConnection();
-				PreparedStatement ps = conn.prepareStatement(Constants.CREATE_NEW_SESSION);
-				){
-			ps.setString(1, user.getUserId());
-			ps.setString(2, hash);
-			ps.execute();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return hash;
-	}
-
+	}	
 }

@@ -26,7 +26,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -105,18 +104,21 @@ public class RegisterUserService {
 				MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
 				map.add("apiKey", "4hJctCGcfUNkEkJh9mH42yQ3Q9WHQhLv");
 				map.add("toAddress", user.getEmail());
-				map.add("subject", "AKPsi Convention Registration Complete");
-				map.add("message", "Congratulations!" + "\n" + "You have successfully registered for Convention!");
+				map.add("subject", "AKPsi Convention Volunteering Registration Complete");
+				map.add("message", "Congratulations!" + "\n" + "You have successfully registered to volunteer for Convention!");
 
 				HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
 
 				restTemplate.postForEntity(Constants.EMAIL_SERVICE_URL , request , String.class );
 			}
+			
+			user.setSessionId(CommonServices.generateSession(user));
+			CommonServices.clearSensitiveInformation(user);
+			return new Response(true, user.serialize(false));
 		}
 		catch(Exception e) {
 			return new Response(false, "Error creating user");
 		}
-		return new Response(true);
 	}
 
 	private String generateSalt() {
