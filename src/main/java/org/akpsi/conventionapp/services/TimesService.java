@@ -10,16 +10,17 @@ import java.util.List;
 import org.akpsi.conventionapp.objects.Times;
 import org.akpsi.conventionapp.util.ConnectionFactory;
 import org.akpsi.conventionapp.util.Constants;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class TimesService {
 
 	
-	@RequestMapping("/listTimes")
-	public List<Times> getTime(@RequestParam(required=false) String sessionId){
+	@RequestMapping(value = "/listTimes", method = RequestMethod.POST)
+	public List<Times> getTime(@RequestBody(required=false) String sessionId){
 		
 		List<Times> times = new LinkedList<Times>();
 		
