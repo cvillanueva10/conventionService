@@ -51,7 +51,7 @@ public class RegisterUserService {
 
 	public static boolean userExist(String email){
 		try(Connection conn = ConnectionFactory.getConnection();
-				PreparedStatement ps = conn.prepareStatement(Constants.CHECK_FOR_USER)){
+				PreparedStatement ps = conn.prepareStatement(Constants.SQL_CHECK_FOR_USER)){
 			int numOfUserWithEmail = Integer.MIN_VALUE;
 			ps.setString(1, email);
 			try(ResultSet rs = ps.executeQuery()){
@@ -79,7 +79,7 @@ public class RegisterUserService {
 
 		try(
 				Connection conn = ConnectionFactory.getConnection();
-				PreparedStatement ps = conn.prepareStatement(Constants.REGISTER_USER);
+				PreparedStatement ps = conn.prepareStatement(Constants.SQL_REGISTER_USER);
 				) {
 			String salt = generateSalt();
 			ps.setString(1, user.getFirstName());
@@ -131,7 +131,7 @@ public class RegisterUserService {
 		try(
 				Connection conn = ConnectionFactory.getConnection();
 				Statement stmt = conn.createStatement();
-				ResultSet rs = stmt.executeQuery(Constants.GET_STATES);
+				ResultSet rs = stmt.executeQuery(Constants.SQL_GET_STATES);
 				){
 			while (rs.next()){
 				states.add(new State(rs.getString("name")));
@@ -149,7 +149,7 @@ public class RegisterUserService {
 		try(
 				Connection conn = ConnectionFactory.getConnection();
 				Statement stmt = conn.createStatement();
-				ResultSet rs = stmt.executeQuery(Constants.GET_COUNTRIES);
+				ResultSet rs = stmt.executeQuery(Constants.SQL_GET_COUNTRIES);
 				){
 			while (rs.next()){
 				countries.add(new Country(rs.getString("name")));

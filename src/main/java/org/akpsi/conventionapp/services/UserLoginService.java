@@ -11,7 +11,6 @@ import java.sql.SQLException;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
-import javax.servlet.http.HttpServletResponse;
 
 import org.akpsi.conventionapp.objects.Response;
 import org.akpsi.conventionapp.objects.Session;
@@ -42,7 +41,7 @@ public class UserLoginService {
 	public Response logout(@RequestBody Session session) {
 		try(
 				Connection conn = ConnectionFactory.getConnection();
-				PreparedStatement ps = conn.prepareStatement(Constants.USER_LOGOUT)
+				PreparedStatement ps = conn.prepareStatement(Constants.SQL_USER_LOGOUT)
 				){
 			ps.setString(1, session.getSession());
 			ps.execute();
@@ -59,7 +58,7 @@ public class UserLoginService {
 		String actualSalt = null;
 		try(
 				Connection conn = ConnectionFactory.getConnection();
-				PreparedStatement ps = conn.prepareStatement(Constants.USER_LOGIN);
+				PreparedStatement ps = conn.prepareStatement(Constants.SQL_USER_LOGIN);
 				){
 			ps.setString(1, user.getEmail());
 			try(ResultSet rs = ps.executeQuery()){

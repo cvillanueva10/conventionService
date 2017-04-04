@@ -7,6 +7,7 @@ import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.akpsi.conventionapp.objects.Session;
 import org.akpsi.conventionapp.objects.Times;
 import org.akpsi.conventionapp.util.ConnectionFactory;
 import org.akpsi.conventionapp.util.Constants;
@@ -20,15 +21,16 @@ public class TimesService {
 
 	
 	@RequestMapping(value = "/listTimes", method = RequestMethod.POST)
-	public List<Times> getTime(@RequestBody(required=false) String sessionId){
+	public List<Times> getTime(@RequestBody(required=false) Session sessionId){
 		
 		List<Times> times = new LinkedList<Times>();
 		
 		try(
 				Connection conn = ConnectionFactory.getConnection();
 				Statement stmt = conn.createStatement();
-				ResultSet rs = stmt.executeQuery(Constants.GET_TIMES);
+				ResultSet rs = stmt.executeQuery(Constants.SQL_GET_TIMES);
 				){
+			boolean isValidSession = CommonServices.isValidSessionId(sessionId.getSession());
 			while (rs.next()){
 				Times time = new Times();
 				time.setActivity(rs.getString("activity"));
@@ -36,7 +38,11 @@ public class TimesService {
 				time.setDescription(rs.getString("description"));
 				time.setTime(rs.getString("time"));
 				if (sessionId!=null && !"{}".equals(sessionId)){
-					time.setCanRegister(true);
+					if (isValidSession){
+						time.setCanRegister(true);
+					}else{
+						time.setCanRegister(false);
+					}
 				}else{
 					time.setCanRegister(false);
 				}
