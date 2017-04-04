@@ -14,6 +14,7 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.servlet.http.HttpServletResponse;
 
 import org.akpsi.conventionapp.objects.Response;
+import org.akpsi.conventionapp.objects.Session;
 import org.akpsi.conventionapp.objects.User;
 import org.akpsi.conventionapp.util.ConnectionFactory;
 import org.akpsi.conventionapp.util.Constants;
@@ -37,8 +38,22 @@ public class UserLoginService {
 		return new String(encodedPassword);
 	}
 	
+	@RequestMapping(value = "/logout", method = RequestMethod.POST)
+	public Response logout(@RequestBody Session session) {
+		try(
+				Connection conn = ConnectionFactory.getConnection();
+				PreparedStatement ps = conn.prepareStatement(Constants.USER_LOGOUT)
+				){
+			ps.setString(1, session.getSession());
+			ps.execute();
+		} catch (SQLException e) {
+			return new Response(false);
+		}
+		return new Response(true);
+	}
+	
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public Response createUser(@RequestBody User user, HttpServletResponse response) {
+	public Response userLogin(@RequestBody User user) {
 		User actualUser = new User();
 		String actualPassword = null;
 		String actualSalt = null;
@@ -54,6 +69,7 @@ public class UserLoginService {
 					actualUser.setUserId(rs.getString("userId"));
 					actualPassword = new String(rs.getBytes("password"), StandardCharsets.UTF_8);
 					actualSalt = rs.getString("salt");
+					actualUser.setUserRole(rs.getInt("role"));
 					break;
 				}
 			}

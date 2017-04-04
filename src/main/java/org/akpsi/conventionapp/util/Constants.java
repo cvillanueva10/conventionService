@@ -12,13 +12,15 @@ public class Constants {
 
 	public static final String GET_COUNTRIES = "SELECT name from countries order by `order`,name";
 
-	public static final String USER_LOGIN = "SELECT first_name, last_name, userId, salt, password from users where email = ?";
+	public static final String USER_LOGIN = "SELECT first_name, last_name, userId, salt, password, role from users where email = ?";
 
 	public static final String CREATE_NEW_SESSION = "insert into sessions (userId, session, expires_on) VALUES (?,?,NOW() + INTERVAL 1 DAY) ";
 
 	public static final String CHECK_FOR_USER = "SELECT count(email) from `users` where email=?";
 	
 	public final static String EMAIL_SERVICE_URL = "http://convention.adrianacala.com:8004/";
+
+	public static final String USER_LOGOUT = "delete from sessions where session = ?";
 	
 	public static final String FORGOT_PASSWORD_ENTRY = "INSERT INTO 'forgot_password' ('user_id','token') VALUES (?, ?)";
 }

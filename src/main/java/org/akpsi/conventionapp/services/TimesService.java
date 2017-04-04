@@ -35,8 +35,10 @@ public class TimesService {
 				time.setDate(rs.getString("date"));
 				time.setDescription(rs.getString("description"));
 				time.setTime(rs.getString("time"));
-				if (sessionId!=null){
+				if (sessionId!=null && !"{}".equals(sessionId)){
 					time.setCanRegister(true);
+				}else{
+					time.setCanRegister(false);
 				}
 				times.add(time);
 			}

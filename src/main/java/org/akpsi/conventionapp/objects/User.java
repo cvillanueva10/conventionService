@@ -25,8 +25,19 @@ public class User {
 	String userId;
 	String allowText;
 	String allowEmail;
+	@JsonProperty("session_id")
 	String sessionId;
-	
+	@JsonProperty("user_role")
+	int userRole;
+
+	public int getUserRole() {
+		return userRole;
+	}
+
+	public void setUserRole(int userRole) {
+		this.userRole = userRole;
+	}
+
 	public String getSessionId() {
 		return sessionId;
 	}
