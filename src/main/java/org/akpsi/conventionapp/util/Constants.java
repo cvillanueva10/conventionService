@@ -19,4 +19,6 @@ public class Constants {
 	public static final String CHECK_FOR_USER = "SELECT count(email) from `users` where email=?";
 	
 	public final static String EMAIL_SERVICE_URL = "http://convention.adrianacala.com:8004/";
+	
+	public static final String FORGOT_PASSWORD_ENTRY = "INSERT INTO 'forgot_password' ('user_id','token') VALUES (?, ?)";
 }
