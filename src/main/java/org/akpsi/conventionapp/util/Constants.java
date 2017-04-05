@@ -16,13 +16,19 @@ public class Constants {
 
 	public static final String SQL_CREATE_NEW_SESSION = "insert into sessions (userId, session, expires_on) VALUES (?,?,NOW() + INTERVAL 1 DAY) ";
 
-	public static final String SQL_CHECK_FOR_USER = "SELECT count(email) from `users` where email=?";
+	public static final String SQL_CHECK_FOR_USER = "SELECT count(email) as `cnt` from `users` where email=?";
 	
 	public final static String EMAIL_SERVICE_URL = "http://convention.adrianacala.com:8004/";
 
 	public static final String SQL_USER_LOGOUT = "delete from sessions where session = ?";
 
 	public static final String SQL_CHECK_IF_VALID_SESSION = "select count(session) as `cnt` from sessions where session = ?";
+	
+	public static final String EMAIL_API_KEY = "4hJctCGcfUNkEkJh9mH42yQ3Q9WHQhLv";
+	
+	public static final String EMAIL_REGISTRATION_SUBJECT = "AKPsi Convention Volunteering Registration Complete";
+	
+	public static final String EMAIL_REGISTRATION_BODY = "Congratulations! You have successfully registered to volunteer for Convention!";
 	
 	public static final String FORGOT_PASSWORD_ENTRY = "INSERT INTO 'forgot_password' ('user_id','token') VALUES (?, ?)";
 }

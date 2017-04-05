@@ -27,6 +27,26 @@ public class CommonServices {
 		actualUser.setSalt(null);
 	}
 	
+	public static boolean userExist(String email){
+		try(Connection conn = ConnectionFactory.getConnection();
+				PreparedStatement ps = conn.prepareStatement(Constants.SQL_CHECK_FOR_USER)){
+			int numOfUserWithEmail = Integer.MIN_VALUE;
+			ps.setString(1, email);
+			try(ResultSet rs = ps.executeQuery()){
+				if (rs.next()){
+					numOfUserWithEmail = rs.getInt("cnt");
+				}
+			}
+			if (numOfUserWithEmail==1){
+				return true;
+			}
+			return false;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
 	public static boolean isValidSessionId(String sessionId){
 		try(
 				Connection conn = ConnectionFactory.getConnection();

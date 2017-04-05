@@ -49,31 +49,11 @@ public class RegisterUserService {
 		return new String(encodedPassword);
 	}
 
-	public static boolean userExist(String email){
-		try(Connection conn = ConnectionFactory.getConnection();
-				PreparedStatement ps = conn.prepareStatement(Constants.SQL_CHECK_FOR_USER)){
-			int numOfUserWithEmail = Integer.MIN_VALUE;
-			ps.setString(1, email);
-			try(ResultSet rs = ps.executeQuery()){
-				if (rs.next()){
-					numOfUserWithEmail = rs.getInt(1);
-				}
-			}
-			if (numOfUserWithEmail==1){
-				return true;
-			}
-			return false;
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return true;
-	}
-
 	@RequestMapping(value = "/createUser", method = RequestMethod.POST)
 	public Response createUser(@RequestBody User user) {
 
 		// First check to see if the user exists.
-		if (userExist(user.getEmail())){
+		if (CommonServices.userExist(user.getEmail())){
 			return new Response(false,"Email is already in use.");
 		}
 
@@ -102,10 +82,10 @@ public class RegisterUserService {
 				headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
 				MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
-				map.add("apiKey", "4hJctCGcfUNkEkJh9mH42yQ3Q9WHQhLv");
+				map.add("apiKey", Constants.EMAIL_API_KEY);
 				map.add("toAddress", user.getEmail());
-				map.add("subject", "AKPsi Convention Volunteering Registration Complete");
-				map.add("message", "Congratulations!" + "\n" + "You have successfully registered to volunteer for Convention!");
+				map.add("subject", Constants.EMAIL_REGISTRATION_SUBJECT);
+				map.add("message", Constants.EMAIL_REGISTRATION_BODY);
 
 				HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
 
