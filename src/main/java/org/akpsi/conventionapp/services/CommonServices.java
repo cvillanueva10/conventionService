@@ -1,18 +1,37 @@
 package org.akpsi.conventionapp.services;
 
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+
 import org.akpsi.conventionapp.objects.User;
 import org.akpsi.conventionapp.util.ConnectionFactory;
 import org.akpsi.conventionapp.util.Constants;
+import org.apache.commons.codec.binary.Base64;
 
 public class CommonServices {
 
+	public static String hashPassword( final char[] password, final byte[] salt, final int iterations, final int keyLength ) throws InvalidKeySpecException, NoSuchAlgorithmException {
+
+		SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
+		PBEKeySpec spec = new PBEKeySpec(password, salt, iterations, keyLength);
+		SecretKey key = skf.generateSecret(spec);
+		byte[] res = key.getEncoded( );
+		String strPass = new String(res, StandardCharsets.UTF_8);
+		byte[] encodedPassword = Base64.encodeBase64(strPass.getBytes());
+		return new String(encodedPassword);
+	}
+	
 	public static void clearSensitiveInformation(User actualUser) {
 		actualUser.setUserId(null);
 		actualUser.setPassword(null);

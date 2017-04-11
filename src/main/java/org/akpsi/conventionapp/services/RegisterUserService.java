@@ -38,17 +38,6 @@ import org.springframework.web.client.RestTemplate;
 @RestController
 public class RegisterUserService {
 
-	public static String hashPassword( final char[] password, final byte[] salt, final int iterations, final int keyLength ) throws InvalidKeySpecException, NoSuchAlgorithmException {
-
-		SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
-		PBEKeySpec spec = new PBEKeySpec(password, salt, iterations, keyLength);
-		SecretKey key = skf.generateSecret(spec);
-		byte[] res = key.getEncoded( );
-		String strPass = new String(res, StandardCharsets.UTF_8);
-		byte[] encodedPassword = Base64.encodeBase64(strPass.getBytes());
-		return new String(encodedPassword);
-	}
-
 	@RequestMapping(value = "/createUser", method = RequestMethod.POST)
 	public Response createUser(@RequestBody User user) {
 
@@ -66,7 +55,7 @@ public class RegisterUserService {
 			ps.setString(2, user.getLastName());
 			ps.setString(3, user.getEmail());
 			ps.setString(4, salt);
-			ps.setString(5, hashPassword(user.getPassword().toCharArray(), salt.getBytes(), 1, 256));
+			ps.setString(5, CommonServices.hashPassword(user.getPassword().toCharArray(), salt.getBytes(), 1, 256));
 			ps.setString(6, user.getPhoneNumber());
 			ps.setString(7, user.getAddress());
 			ps.setString(8, user.getCity());

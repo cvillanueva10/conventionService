@@ -33,7 +33,7 @@ public class ForgotPasswordService {
 	public Response forgotPassword(@RequestBody User user, HttpServletResponse response) {
 
 		if (!CommonServices.userExist(user.getEmail())){
-			return new Response(false,"No user is registered under this email.");
+			return new Response(false,"If an account was registered to this email, then an email has been sent to your inbox. Please follow instructions within email");
 		}
 
 		try(
@@ -52,16 +52,16 @@ public class ForgotPasswordService {
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
 			MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
-			map.add("apiKey", "4hJctCGcfUNkEkJh9mH42yQ3Q9WHQhLv");
+			map.add("apiKey", Constants.EMAIL_API_KEY);
 			map.add("toAddress", user.getEmail());
-			map.add("subject", "Forgot Password - Link to reset password");
-			map.add("message", "<a href=\"http://localhost:8080/Convention/forgot_password?token=" + token + "\"> Click here to reset your password </a>");
+			map.add("subject", Constants.EMAIL_FORGOT_PASSWORD_SUBJECT);
+			map.add("message", Constants.EMAIL_FORGOT_PASSWORD_MESSAGE);
 
 			HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
 
 			restTemplate.postForEntity(Constants.EMAIL_SERVICE_URL , request , String.class );
 
-			return new Response(true, "Forgot Password Session Started");
+			return new Response(true, "If an account was registered to this email, then an email has been sent to your inbox. Please follow instructions within email");
 
 		}catch(Exception e) {
 			return new Response(false, "Error creating session");
@@ -79,20 +79,21 @@ public class ForgotPasswordService {
 
 		String salt = user.getSalt();
 		try {
-			String hashedNewPassword = RegisterUserService.hashPassword(user.getPassword().toCharArray(), salt.getBytes(), 1, 256);
+			String hashedNewPassword = CommonServices.hashPassword(user.getPassword().toCharArray(), salt.getBytes(), 1, 256);
 			isOldPassword = checkIfOldPassword(user, hashedNewPassword);
 		} catch (Exception e){
 			return new Response(false, "Error checking old passwords");
 		}
+		
 		if(isOldPassword){
-			return new Response(false, "This is an old password");
+			return new Response(false, "This is an old password, please use a new password");
 		}
 		 	
 		try(
 				Connection conn = ConnectionFactory.getConnection();
 				PreparedStatement ps = conn.prepareStatement(Constants.SQL_RESET_PASSWORD);
 				){
-			ps.setString(1, RegisterUserService.hashPassword(user.getPassword().toCharArray(), salt.getBytes(), 1, 256));
+			ps.setString(1, CommonServices.hashPassword(user.getPassword().toCharArray(), salt.getBytes(), 1, 256));
 			ps.setString(2, user.getUserId());
 			ps.execute();
 
